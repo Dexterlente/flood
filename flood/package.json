@@ -8,10 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "alasql": "^4.6.6",
     "axios": "^1.11.0",
     "next": "15.5.2",
-    "papaparse": "^5.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

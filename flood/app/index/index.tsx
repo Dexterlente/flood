@@ -1,84 +1,51 @@
 "use client";
 
-import React, { useEffect } from "react";
-import Papa from "papaparse";
-// @ts-ignore – alasql doesn't ship proper types
-import alasql from "alasql/dist/alasql.min.js";
-
-// ✅ Define your row shape
-type ProjectRow = {
-  "Program Name": string;
-  "Project Code": string;
-  "Project Name": string;
-  "Implementing Agency": string;
-  "Project Location": string;
-  "Contractors": string;
-  "Project Status": string;
-  "Project Latitude & Longitude": string;
-  "Fund Source": string;
-  "Project Cost (PHP)": string;
-  "Utilized Budget": string;
-  "Budget Utilization/Disbursement Rate": string;
-  "Start Date": string;
-  "Completion Date": string;
-};
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Index: React.FC = () => {
+  const [rows, setRows] = useState<any[]>([]);
+
   useEffect(() => {
-    const loadCSV = async () => {
-      try {
-        const response = await fetch("/flood.csv");
-        if (!response.ok) throw new Error("Failed to load CSV");
+    axios.get("/api/all?page=1").then((res) => {
+      const data = res.data;
 
-        const text = await response.text();
-
-        Papa.parse<ProjectRow>(text, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results) => {
-            const data = results.data;
-
-            if (!data.length) {
-              console.warn("⚠️ No rows found in CSV");
-              return;
-            }
-
-            // ✅ Query Example 1: Filter by location
-            const apayaoProjects = alasql(
-              "SELECT * FROM ? WHERE [Project Location] LIKE '%Apayao%'",
-              [data]
-            );
-            console.log("📌 Apayao Projects:", apayaoProjects);
-
-            // ✅ Query Example 2: Group by agency (alias fixed)
-            const projectsPerAgency = alasql(
-              "SELECT [Implementing Agency], COUNT(*) AS project_count FROM ? GROUP BY [Implementing Agency]",
-              [data]
-            );
-            console.log("📊 Projects per Agency:", projectsPerAgency);
-
-            // ✅ Query Example 3: Top 5 biggest projects
-            const topProjects = alasql(
-              "SELECT [Project Name], [Project Cost (PHP)] " +
-                "FROM ? ORDER BY CAST([Project Cost (PHP)] AS INT) DESC LIMIT 5",
-              [data]
-            );
-            console.log("💰 Top 5 Projects by Cost:", topProjects);
-          },
-        });
-      } catch (error) {
-        console.error("❌ Error loading CSV:", error);
-      }
-    };
-
-    loadCSV();
+      // Flatten all rows from all tables into a single array of objects
+      const allRows = Object.values(data).flatMap((tableData: any) => tableData.rows || []);
+      setRows(allRows);
+    });
   }, []);
 
+  if (!rows.length) return <div>Loading...</div>;
+
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold">CSV SQL Query Playground</h1>
-      <p>✅ Open your browser console to see the query results.</p>
-    </div>
+    <table border={1} cellPadding={5}>
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Project Location</th>
+          <th>Project Cost (PHP)</th>
+          <th>Start Date/Completion Date </th>
+          <th>Project Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, index) => (
+           <tr key={index}>
+            <td className="px-2 py-1">{row["Project Name"]}</td>
+            <td className="px-2 py-1">{row["Project Location"]}</td>
+            <td className="px-2 py-1">{row["Project Cost (PHP)"]}</td>
+            <td className="px-2 py-1 flex flex-col gap-1">
+              <span>{row["Start Date"]}</span>
+               {row["Completion Date"] !== "Not Available" && (
+                <span>{row["Completion Date"]}</span>
+              )}
+            </td>
+            <td className="px-2 py-1">{row["Project Status"]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
