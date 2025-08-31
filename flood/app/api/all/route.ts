@@ -6,13 +6,12 @@ export async function GET(request: Request) {
   const page = searchParams.get("page") || "1";
 
   try {
-    // Call your Flask backend
+
     const API_URL = process.env.API_URL;
     const response = await axios.get(`${API_URL}/all`, {
       params: { page },
     });
 
-    // Return the JSON from Flask
     return NextResponse.json(response.data);
   } catch (error: any) {
     return NextResponse.json(
