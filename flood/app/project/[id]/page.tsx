@@ -2,31 +2,22 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type ProjectData = {
   [key: string]: string | number;
 };
 
-export default function Page({
-  params,
-}: {
-  params: { id: string } | Promise<{ id: string }>;
-}) {
+export default function Page() {
+  const { id } = useParams<{ id: string }>(); // ✅ get the param properly
   const [project, setProject] = useState<ProjectData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [projectId, setProjectId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        // unwrap params (handles both Promise and object)
-        const resolved = await Promise.resolve(params);
-        setProjectId(resolved.id);
-
-        const res = await axios.get(
-          `/api/project?project_code=${resolved.id}`
-        );
+        const res = await axios.get(`/api/project?project_code=${id}`);
         setProject(res.data);
       } catch (error) {
         console.error("Error fetching project data:", error);
@@ -35,8 +26,10 @@ export default function Page({
       }
     };
 
-    fetchProject();
-  }, [params]);
+    if (id) {
+      fetchProject();
+    }
+  }, [id]);
 
   if (loading) {
     return <p className="text-center mt-10">Loading project data...</p>;
@@ -45,7 +38,7 @@ export default function Page({
   if (!project) {
     return (
       <p className="text-center mt-10">
-        No project found for ID {projectId}.
+        No project found for ID {id}.
       </p>
     );
   }
