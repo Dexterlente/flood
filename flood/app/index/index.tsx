@@ -10,6 +10,7 @@ import {
   TableCell,
   TableHead,
 } from "@/components/ui/table";
+import { useRouter } from 'next/navigation'
 
 const PAGE_SIZE = 10;
 const MAX_BUTTONS = 5;
@@ -19,6 +20,7 @@ const Index: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const fetchData = async (page: number) => {
     setLoading(true);
@@ -93,7 +95,7 @@ const Index: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto overflow-hidden py-3">
+    <div className="w-full max-w-7xl mx-auto overflow-hidden py-3 min-h-screen">
       <Table className="min-w-full border border-gray-200 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
@@ -108,6 +110,7 @@ const Index: React.FC = () => {
           {rows.map((row, index) => (
             <TableRow
               key={index}
+              onClick={() => router.push(`/project/${row["Project Code"]}`)}
               className={`h-[100px] cursor-pointer ${index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-200"}`}
             >
               <TableCell className="px-4 py-2 whitespace-normal break-words max-w-xs ">{row["Project Name"]}</TableCell>
