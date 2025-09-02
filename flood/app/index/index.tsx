@@ -93,7 +93,7 @@ const Index: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto overflow-hidden">
+    <div className="w-full max-w-7xl mx-auto overflow-hidden py-3">
       <Table className="min-w-full border border-gray-200 table-auto">
         <TableHeader>
           <TableRow className="bg-gray-100">
@@ -108,16 +108,18 @@ const Index: React.FC = () => {
           {rows.map((row, index) => (
             <TableRow
               key={index}
-              className={index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-200"}
+              className={`h-[100px] cursor-pointer ${index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-200"}`}
             >
-              <TableCell className="px-4 py-2 truncate max-w-xs">{row["Project Name"]}</TableCell>
-              <TableCell className="px-4 py-2 truncate max-w-xs">{row["Project Location"]}</TableCell>
+              <TableCell className="px-4 py-2 whitespace-normal break-words max-w-xs ">{row["Project Name"]}</TableCell>
+              <TableCell className="px-4 py-2 whitespace-normal break-words max-w-xs">{row["Project Location"]}</TableCell>
               <TableCell className="px-4 py-2">{row["Project Cost (PHP)"]}</TableCell>
-              <TableCell className="px-4 py-2 flex flex-col gap-1">
-                <span>{row["Start Date"]}</span>
-                {row["Completion Date"] !== "Not Available" && (
-                  <span>{row["Completion Date"]}</span>
-                )}
+              <TableCell className="px-4 py-2 align-middle">
+                <div className="flex flex-col gap-1">
+                  <span>{row["Start Date"]}</span>
+                  {row["Completion Date"] !== "Not Available" && (
+                    <span>{row["Completion Date"]}</span>
+                  )}
+                </div>
               </TableCell>
               <TableCell className="px-4 py-2">{row["Project Status"]}</TableCell>
             </TableRow>
