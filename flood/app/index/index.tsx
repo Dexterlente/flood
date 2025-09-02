@@ -70,7 +70,7 @@ const Index: React.FC = () => {
       <button
         key={i}
         className={`px-3 py-1 rounded border ${
-          page === i ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          page === i ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
         onClick={() => setPage(i)}
       >
@@ -134,7 +134,7 @@ const Index: React.FC = () => {
           disabled={page === 1}
           onClick={() => setPage(page - 1)}
         >
-          Previous
+          &lt;
         </button>
 
         {pageButtons}
@@ -144,7 +144,7 @@ const Index: React.FC = () => {
           disabled={page === totalPages}
           onClick={() => setPage(page + 1)}
         >
-          Next
+          &gt;
         </button>
       </div>
     </div>
