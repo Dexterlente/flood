@@ -1,0 +1,20 @@
+// Use objects instead of plain strings
+export const regions = [
+  { value: "Ilocos Region", label: "(Region I) Ilocos Region" },
+  { value: "Cagayan Valley", label: "(Region II) Cagayan Valley" },
+  { value: "CAR", label: "(Cordillera Administrative Region) CAR" },
+  { value: "Central Luzon", label: "(Region III) Central Luzon" },
+  { value: "NCR", label: "(National Capital Region) NCR" },
+  { value: "CALABARZON", label: "(Region IV-A) CALABARZON" },
+  { value: "Bicol Region", label: "(Region V) Bicol Region" },
+  { value: "MIMAROPA Region", label: "(MIMAROPA Region) MIMAROPA Region" },
+  { value: "Western Visayas", label: "(Region VI) Western Visayas" },
+  { value: "Central Visayas", label: "(Region VII) Central Visayas" },
+  { value: "Eastern Visayas", label: "(Region VIII) Eastern Visayas" },
+  { value: "Zamboanga Peninsula", label: "(Region IX) Zamboanga Peninsula" },
+  { value: "Northern Mindanao", label: "(Region X) Northern Mindanao" },
+  { value: "Davao Region", label: "(Region XI) Davao Region" },
+  { value: "SOCCSKSARGEN", label: "(Region XII) SOCCSKSARGEN" },
+  { value: "Caraga", label: "(Region XIII) Caraga" },
+  { value: "BARMM", label: "(Bangsamoro Autonomous Region in Muslim Mindanao) BARMM" },
+];
