@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ProjectTable } from "../_components/table";
 import Pagination from "../_components/pagination";
+import Dropdown from "../_components/dropdown";
 
 const Index: React.FC = () => {
   const searchParams = useSearchParams();
@@ -16,13 +17,14 @@ const Index: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const [value, setValue] = useState("");
+  const [data, setData] = useState<any>(null);
 
   const fetchData = async (page: number) => {
     setLoading(true);
     try {
       const res = await axios.get(`/api/all?page=${page}`);
       const data = res.data;
-
       const allRows = Object.values(data).flatMap((tableData: any) => tableData.rows || []);
       setRows(allRows);
 
@@ -43,12 +45,31 @@ const Index: React.FC = () => {
     router.replace(`?${params.toString()}`);
   }, [page, router]);
 
+
+
+  const handleChange = async (region: string) => {
+    setValue(region);
+
+    try {
+      const res = await axios.get(`/api/region`, {
+        params: { region },
+      });
+      const allRows = res?.data?.rows ?? [];
+      
+      setData(allRows);
+    } catch (err) {
+      console.error("Error fetching region data:", err);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="w-full max-w-7xl mx-auto overflow-hidden py-3 min-h-screen">
-      <ProjectTable rows={rows} />
-      
+    <div className="w-full max-w-7xl mx-auto overflow-hidden py-3">
+      <Dropdown handleChange={handleChange} />
+      <div className="min-h-screen mt-4">
+        <ProjectTable rows={rows}/>
+      </div>
       <Pagination
         page={page}
         totalPages={totalPages}

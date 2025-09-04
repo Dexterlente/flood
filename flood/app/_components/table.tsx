@@ -29,7 +29,7 @@ export function ProjectTable({ rows }: ProjectTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((row, index) => (
+        {rows?.map((row, index) => (
           <TableRow
             key={index}
             onClick={() => router.push(`/project/${row["Project Code"]}`)}

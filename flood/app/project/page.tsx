@@ -19,12 +19,10 @@ export default function RegionSelect() {
     setValue(region);
 
     try {
-      // ✅ Query param = region.value
       const res = await axios.get(`/api/region`, {
         params: { region },
       });
       setData(res.data);
-      console.log("API response:", res.data);
     } catch (err) {
       console.error("Error fetching region data:", err);
     }
