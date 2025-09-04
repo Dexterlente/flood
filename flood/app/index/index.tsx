@@ -9,10 +9,9 @@ import Dropdown from "../_components/dropdown";
 
 const Index: React.FC = () => {
   const searchParams = useSearchParams();
+  const pageFromUrl = Number(searchParams.get("page")) || 1
 
-  const [page, setPage] = useState<number>(
-    Number(searchParams.get("page")) || 1
-  );
+  const [page, setPage] = useState<number>(pageFromUrl);
   const [rows, setRows] = useState<any[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -34,6 +33,10 @@ const Index: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setPage(pageFromUrl);
+  }, [pageFromUrl]);
 
   useEffect(() => {
     fetchData(page);
