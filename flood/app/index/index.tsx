@@ -40,6 +40,7 @@ const Index: React.FC = () => {
 
   useEffect(() => {
     fetchData(page);
+    // handleChange(value, page);
   }, [page]);
 
   useEffect(() => {
@@ -50,16 +51,22 @@ const Index: React.FC = () => {
 
 
 
-  const handleChange = async (region: string) => {
+  const handleChange = async (region: string, page: number = 1) => {
     setValue(region);
-
+    console.log("Selected region:", region);
     try {
       const res = await axios.get(`/api/region`, {
-        params: { region },
+        params: { region, page },
       });
+
       const allRows = res?.data?.rows ?? [];
-      
       setData(allRows);
+
+      const totalPages = res?.data?.total_pages ?? 1; 
+      setTotalPages(totalPages);
+
+      setPage(page); 
+
     } catch (err) {
       console.error("Error fetching region data:", err);
     }

@@ -1,5 +1,6 @@
 // Use objects instead of plain strings
 export const regions = [
+  { value: "all", label: "Selected All Regions" },
   { value: "Ilocos Region", label: "(Region I) Ilocos Region" },
   { value: "Cagayan Valley", label: "(Region II) Cagayan Valley" },
   { value: "CAR", label: "(Cordillera Administrative Region) CAR" },
