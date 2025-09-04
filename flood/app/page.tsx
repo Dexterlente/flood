@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Index from "./index";
+import { Suspense } from "react";
+
 
 export default function Home() {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <Index />
-    </div>
+    </Suspense>
   );
 }
