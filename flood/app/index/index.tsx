@@ -12,35 +12,29 @@ const Index: React.FC = () => {
   const pageFromUrl = Number(searchParams.get("page")) || 1
 
   const [page, setPage] = useState<number>(pageFromUrl);
-  const [rows, setRows] = useState<any[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
-  const [value, setValue] = useState("");
-  const [data, setData] = useState<any>(null);
-
-  const fetchData = async (page: number) => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`/api/all?page=${page}`);
-      const data = res.data;
-      const allRows = Object.values(data).flatMap((tableData: any) => tableData.rows || []);
-      setRows(allRows);
-
-      const firstTable = Object.values(data)[0] as any;
-      setTotalPages(firstTable?.total_pages ?? 1);
-    } finally {
-      setLoading(false);
+  const [value, setValue] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("selectedRegion") || "all";
     }
-  };
+    return "all";
+  });
+  const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     setPage(pageFromUrl);
   }, [pageFromUrl]);
 
   useEffect(() => {
-    fetchData(page);
-    // handleChange(value, page);
+      const saved = localStorage.getItem("selectedRegion");
+      if (saved) {
+        setValue(saved);
+        handleChange(saved, page);
+      } else {
+      handleChange("all", page); // optional default
+    }
   }, [page]);
 
   useEffect(() => {
@@ -52,13 +46,11 @@ const Index: React.FC = () => {
 
 
   const handleChange = async (region: string, page: number = 1) => {
-    setValue(region);
-    console.log("Selected region:", region);
-    try {
-      const res = await axios.get(`/api/region`, {
-        params: { region, page },
-      });
+    if (region !== value) setValue(region);
+    localStorage.setItem("selectedRegion", region);
 
+    try {
+      const res = await axios.get(`/api/region`, { params: { region, page } });
       const allRows = res?.data?.rows ?? [];
       setData(allRows);
 
@@ -66,7 +58,6 @@ const Index: React.FC = () => {
       setTotalPages(totalPages);
 
       setPage(page); 
-
     } catch (err) {
       console.error("Error fetching region data:", err);
     }
@@ -78,7 +69,7 @@ const Index: React.FC = () => {
     <div className="w-full max-w-7xl mx-auto overflow-hidden py-3">
       <Dropdown handleChange={handleChange} />
       <div className="min-h-screen mt-4">
-        <ProjectTable rows={rows}/>
+        <ProjectTable rows={data}/>
       </div>
       <Pagination
         page={page}
