@@ -64,7 +64,7 @@ const Index: React.FC = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-
+  // TODO loader
   return (
     <div className="w-full max-w-7xl mx-auto overflow-hidden py-3">
       <Dropdown handleChange={handleChange} />
